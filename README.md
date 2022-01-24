@@ -15,12 +15,19 @@ As the contract owner, deploy the LinearTimelock.sol. The only parameter require
 
 ### Step 3
 Perform the `setTimestamp` function and pass in the two required parameters:
-1. the `_cliffTimePeriod` - the amount of seconds from now to when the linear release (unlocking) period will begin
-2. the `_releaseTimePeriod - the amount of seconds from now to when the linear release (unlocking) periods will end (inclusive of the cliffTimePeriod)
+1. the `_cliffTimePeriod` - the amount of seconds from **now** until when the linear **unlocking** (release) period **begins**
+2. the `_releaseTimePeriod` - the entire amount of seconds from **now** until when the **unlocking** period **ends** (this is inclusive of the `_cliffTimePeriod`)
 
 ![linear-diagram](https://user-images.githubusercontent.com/9831342/150713492-ab7eba3a-207f-4e58-a94c-a2cee8181c37.jpg)
 
-For example if you want to lock the tokens for 1 day and then release them over an additional 2 day period the `_cliffTimePeriod` will be `86400` (1 day represented in seconds) and the `_releaseTimePeriod` will be `259200` (3 days represented in seconds).
+For example if you want to:
+- lock the tokens for 1 day 
+- then (after 1 day has passed) commence releasing the tokens linearly over an **additional** 2 day period
+
+![cliff_and_release_example](https://user-images.githubusercontent.com/9831342/150714593-0bc77777-c01b-4617-a67d-547fcd3d9e52.jpg)
+
+The `_cliffTimePeriod` will be `86400` (1 day represented in seconds) 
+The `_releaseTimePeriod` will be `259200` (3 days represented in seconds).
 
 ![Screen Shot 2022-01-24 at 12 47 04 pm](https://user-images.githubusercontent.com/9831342/150713778-6c2d76ec-f0f6-4acb-b401-9991d0c7e781.png)
 
