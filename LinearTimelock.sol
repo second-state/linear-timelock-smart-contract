@@ -13,6 +13,7 @@ contract LinearTimelock {
     bool internal locked;
 
     // Library usage
+    using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
     // Contract owner
@@ -196,7 +197,7 @@ contract LinearTimelock {
         alreadyWithdrawn[to] = alreadyWithdrawn[to].add(amount);
         balances[to] = balances[to].sub(amount);
         mostRecentUnlockTimestamp[to] = block.timestamp;
-        token.transfer(to, amount);
+        token.safeTransfer(to, amount);
         emit TokensUnlocked(to, amount);
     }
 
@@ -208,6 +209,6 @@ contract LinearTimelock {
         // This function can not access the official timelocked tokens; just other random ERC20 tokens that may have been accidently sent here
         require(token != erc20Contract, "Token address can not be ERC20 address which was passed into the constructor");
         // Transfer the amount of the specified ERC20 tokens, to the owner of this contract
-        token.transfer(owner, amount);
+        token.safeTransfer(owner, amount);
     }
 }
