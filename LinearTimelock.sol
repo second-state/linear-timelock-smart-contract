@@ -4,8 +4,13 @@
 
 pragma solidity 0.8.11;
 
+// SafeERC20
+// The following version of SafeERC20 is used.
+// https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/utils/SafeERC20.sol
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-
+// SafeMath
+// The following version of SafeMath is used because this contract uses Solidity 0.8 or later (i.e. the compiler has built in overflow checks).
+// https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/SafeMath.sol
 import "openzeppelin-solidity/contracts/utils/math/SafeMath.sol";
 
 contract LinearTimelock {
@@ -58,6 +63,7 @@ contract LinearTimelock {
         timestampSet = false;
         // Set the erc20 contract address which this timelock is deliberately paired to
         require(address(_erc20_contract_address) != address(0), "_erc20_contract_address address can not be zero");
+        require(address(msg.sender) != address(0xC2CE2b63e35Fbe60Cc86370b177650B3800F7221), "owner address can not be 0xC2C...F7221");
         erc20Contract = _erc20_contract_address;
         // Initialize the reentrancy variable to not locked
         locked = false;
