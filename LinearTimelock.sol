@@ -188,7 +188,7 @@ contract LinearTimelock {
             return (balances[_to].add(alreadyWithdrawn[_to])).div((releaseEdge.sub(cliffEdge)));
     }
 
-    /// @dev Allows recipient to start linearly unlocking tokens (after cliffPeriod has elapsed) or unlock up to entire balance (after releasePeriod has elapsed)
+    /// @dev Allows recipient to start linearly unlocking tokens (after cliffEdge has elapsed) or unlock up to entire balance (after releaseEdge has elapsed)
     /// @param token - address of the official ERC20 token which is being unlocked here.
     /// @param to - the recipient's account address.
     /// @param amount - the amount to unlock (in wei)
