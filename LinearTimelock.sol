@@ -188,7 +188,7 @@ contract LinearTimelock {
             return (balances[_to].add(alreadyWithdrawn[_to])).div((releaseEdge.sub(cliffEdge)));
     }
 
-    /// @dev Allows recipient to unlock tokens after 24 month period has elapsed
+    /// @dev Allows recipient to start linearly unlocking tokens (after cliffPeriod has elapsed) or unlock up to entire balance (after releasePeriod has elapsed)
     /// @param token - address of the official ERC20 token which is being unlocked here.
     /// @param to - the recipient's account address.
     /// @param amount - the amount to unlock (in wei)
@@ -199,12 +199,20 @@ contract LinearTimelock {
         require(token == erc20Contract, "Token parameter must be the same as the erc20 contract address which was passed into the constructor");
         require(block.timestamp > cliffEdge, "Tokens are only available after correct time period has elapsed");
         // Ensure that the amount is available to be unlocked at this current point in time
-        require(amount <= calculateWeiPerSecond(to).mul((block.timestamp.sub(mostRecentUnlockTimestamp[to]))), "Token amount not available for unlock right now, please try lesser amount.");
-        alreadyWithdrawn[to] = alreadyWithdrawn[to].add(amount);
-        balances[to] = balances[to].sub(amount);
-        mostRecentUnlockTimestamp[to] = block.timestamp;
-        token.safeTransfer(to, amount);
-        emit TokensUnlocked(to, amount);
+        if (block.timestamp > releaseEdge){
+            alreadyWithdrawn[to] = alreadyWithdrawn[to].add(amount);
+            balances[to] = balances[to].sub(amount);
+            mostRecentUnlockTimestamp[to] = block.timestamp;
+            token.safeTransfer(to, amount);
+            emit TokensUnlocked(to, amount);
+        } else {
+            require(amount <= calculateWeiPerSecond(to).mul((block.timestamp.sub(mostRecentUnlockTimestamp[to]))), "Token amount not available for unlock right now, please try lesser amount.");
+            alreadyWithdrawn[to] = alreadyWithdrawn[to].add(amount);
+            balances[to] = balances[to].sub(amount);
+            mostRecentUnlockTimestamp[to] = block.timestamp;
+            token.safeTransfer(to, amount);
+            emit TokensUnlocked(to, amount);
+        }
     }
 
     /// @dev Transfer accidentally locked ERC20 tokens.
