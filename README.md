@@ -76,7 +76,7 @@ Tokens can be allocated to users one at a time using the `depositToken` function
 
 ![Screen Shot 2022-01-24 at 1 11 21 pm](https://user-images.githubusercontent.com/9831342/150716076-6d6bed3b-25ac-48ce-b54a-f7d7a3e94b26.png)
 
-Tokens can also be allocated in bulk using the `bulkDepositTokens` function. This is done using [a third-party script](https://github.com/ParaState/timelock-token-deployment#bulk-deposit-tokens). Please contact via an issue for access to this script.
+Tokens can also be allocated in bulk using the `bulkDepositTokens` function. 
 
 Always keep an exact record of how many tokens (sum total of all ERC20 tokens) which you allocated to the users. This sum total figure is required for the next step (and ensures that there will be the exact amount of tokens in the linear timelock contract to service all of the users, who will be performing the unlock).
 
