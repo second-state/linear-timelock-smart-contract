@@ -4,7 +4,11 @@ Solidity smart contract which disburses ERC20 tokens linearly, over a specific p
 ## How to deploy this linear timelock smart contract
 
 ### Step 1
-Compile the LinearTimelock.sol smart contract using remix, as shown below.
+
+- [ ] Create a brand new account (a new private/public key pair); and do not share the private key with anyone. 
+- [ ] Ensure that the aforementioned account is selected in your wallet software i.e. MetaMask or similar.
+- [ ] Ensure that your wallet software is connected to the correct network.
+- [ ] Compile the [LinearTimelock.sol](https://github.com/second-state/linear-timelock-smart-contract/blob/main/LinearTimelock.sol) contract using Solidity `0.8.11` via the [Remix IDE](https://remix.ethereum.org/). Using version `0.8.11` is important because it provides overflow checks and is compatible with the version of SafeMath which the contract uses.
 
 ![Screen Shot 2022-01-24 at 12 10 43 pm](https://user-images.githubusercontent.com/9831342/150711101-ad2b274a-2b34-4de5-b8ed-5a592b765471.png)
 
