@@ -13,12 +13,17 @@ Solidity smart contract which disburses ERC20 tokens linearly, over a specific p
 ![Screen Shot 2022-01-24 at 12 10 43 pm](https://user-images.githubusercontent.com/9831342/150711101-ad2b274a-2b34-4de5-b8ed-5a592b765471.png)
 
 ### Step 2
-As the contract owner, deploy the LinearTimelock.sol. The only parameter required is the address of the ERC20 contract for which we are locking up tokens for.
+
+- [ ] Ensure that Remix environment is set to "Injected Web3" so that the execution environment is provided by your MetaMask (or similar) wallet software (which must currently be on the Ethereum mainnet with your new owner's account selected).
+
+![Screen Shot 2022-03-14 at 10 20 27 am](https://user-images.githubusercontent.com/9831342/158086216-c45f31ff-762a-4e4c-9cd4-6ddc3c91d1e8.png)
+
+- [ ] As the contract owner, deploy the LinearTimelock.sol. The only parameter required is the address of the ERC20 contract for which we are locking up tokens for.
 
 ![Screen Shot 2022-01-24 at 12 12 14 pm](https://user-images.githubusercontent.com/9831342/150711254-60441ff7-3fd5-4d1d-8005-eb73af1aebe2.png)
 
 ### Step 3
-Perform the `setTimestamp` function and pass in the two required parameters:
+- [ ]  Perform the `setTimestamp` function and pass in the two required parameters:
 1. the `_cliffTimePeriod` - the amount of seconds from **now** until when the linear **unlocking** (release) period **begins**
 2. the `_releaseTimePeriod` - the entire amount of seconds from **now** until when the **unlocking** period **ends** (this is inclusive of the `_cliffTimePeriod`)
 
@@ -36,17 +41,17 @@ The `_releaseTimePeriod` will be `259200` (3 days represented in seconds).
 ![Screen Shot 2022-01-24 at 12 47 04 pm](https://user-images.githubusercontent.com/9831342/150713778-6c2d76ec-f0f6-4acb-b401-9991d0c7e781.png)
 
 ### Step 4
-Check the timestamp variables are correct, before transferring any tokens. This is your final opportunity to discard this contract if any mistakes have been made with the timestamps.
+- [ ]  Check the timestamp variables are correct, before transferring any tokens. There is still an opportunity to abandon this contract if any mistakes have been made with the timestamps.
 
 **timestampSet**
 
-Check that the `timestampSet` variable is `true`
+- [ ]  Check that the `timestampSet` variable is `true`
 
 ![Screen Shot 2022-01-24 at 12 58 00 pm](https://user-images.githubusercontent.com/9831342/150715021-63881e4f-02d8-43d5-a421-452ce2155461.png)
 
 **initialTimestamp**
 
-Check the `initialTimestamp` variable, and confirm its value in proper date format by using [an online epoch to date converter](https://www.epochconverter.com/)
+- [ ]  Check the `initialTimestamp` variable, and confirm its value in proper date format by using [an online epoch to date converter](https://www.epochconverter.com/)
 
 ![Screen Shot 2022-01-24 at 1 00 20 pm](https://user-images.githubusercontent.com/9831342/150715109-8ef231f7-45f3-48a8-8c1a-25bc9b561a66.png)
 
@@ -54,7 +59,7 @@ For example, the value in the above image, `1642993044` is equivalent to `Monday
 
 **cliffEdge**
 
-Check the `cliffEdge` variable, and confirm its value is what your lockup period is intended to be.
+- [ ] Check the `cliffEdge` variable, and confirm its value is what your lockup period is intended to be.
 
 ![Screen Shot 2022-01-24 at 1 03 23 pm](https://user-images.githubusercontent.com/9831342/150715310-3c0d4511-9648-421b-b755-216adfc1ce09.png)
 
@@ -62,7 +67,7 @@ For example, the value in the above image, `1643079444` is equivalent to `Tuesda
 
 **releaseEdge**
 
-Check the `releaseEdge` variable, and confirm its value is what your release period is intended to be.
+- [ ]  Check the `releaseEdge` variable, and confirm its value is what your release period is intended to be.
 
 ![Screen Shot 2022-01-24 at 1 05 20 pm](https://user-images.githubusercontent.com/9831342/150715477-ebdef460-0802-4e44-b3b3-ae0dbd16af01.png)
 
@@ -70,13 +75,13 @@ For example, the value in the above image, `1643252244` is equivalent to `Thursd
 
 ### Checking the associated ERC20 contract
 
-First of all, please check to make absolutely sure that the ERC20 contract associated with this linear timelock contract is correct. This can be done by calling the `erc20Contract` variable, as shown below.
+- [ ]  First of all, please check to make absolutely sure that the ERC20 contract associated with this linear timelock contract is correct. This can be done by calling the `erc20Contract` variable, as shown below.
 
 ![Screen Shot 2022-01-24 at 1 09 22 pm](https://user-images.githubusercontent.com/9831342/150715931-edfe5dde-1c6c-4651-8239-c6cb01b27971.png)
 
 ### Allocating user tokens into the timelock contract
 
-Tokens can be allocated to users one at a time using the `depositToken` function, as shown below.
+Tokens can be allocated to users one at a time using the `depositTokens` function, as shown below.
 
 ![Screen Shot 2022-01-24 at 1 11 21 pm](https://user-images.githubusercontent.com/9831342/150716076-6d6bed3b-25ac-48ce-b54a-f7d7a3e94b26.png)
 
@@ -85,16 +90,20 @@ Tokens can also be allocated in bulk using the `bulkDepositTokens` function.
 Always keep an exact record of how many tokens (sum total of all ERC20 tokens) which you allocated to the users. This sum total figure is required for the next step (and ensures that there will be the exact amount of tokens in the linear timelock contract to service all of the users, who will be performing the unlock).
 
 ### Transfer ERC20 tokens to the linear timelock contract
-From the ERC20 token contract, use the `transfer` function to transfer ERC20 tokens to the linear timelock smart contract's address.
+
+- [ ] Check that the amounts of tokens allocated to each address, in the previous step, are correct.
+
+
+- [ ] Once completely satisfied with all of the above, transfer the appropriate amount of ERC20 tokens (i.e. the sum total of all ERC20 tokens which you allocated to the users in the previous step) to the linear timelock smart contract's address.
 
 ![Screen Shot 2022-01-24 at 1 15 46 pm](https://user-images.githubusercontent.com/9831342/150716642-b2d63734-e928-4513-aa44-860e016be358.png)
 
-You can confirm that these tokens have been transferred by pasting the linear timelock contract's address into the ERC20 contract's `balanceOf` function, as shown below.
+- [ ] Confirm that these tokens have been transferred by pasting the linear timelock contract's address into the ERC20 contract's `balanceOf` function, as shown below.
 
 ![Screen Shot 2022-01-24 at 1 19 48 pm](https://user-images.githubusercontent.com/9831342/150716797-ec250368-538d-4105-80c2-8427031b57c6.png)
 
 ### Finalize owner participation
-Once all allocations have been made and the ERC20 tokens have been transferred into the linear timelock contract, the owner can call the linear timelock contract's `finalizeAllIncomingDeposits()` function. This makes the linear timelock non-custodial, whereby the contract owner has no ability to alter token amounts and so forth. The operation of the linear timelock contract is purely based on the math in the `transferTimeLockedTokensAfterTimePeriod` function from this point forward.
+- [ ] Once all allocations have been made and the ERC20 tokens have been transferred into the linear timelock contract, the owner can call the linear timelock contract's `finalizeAllIncomingDeposits()` function. This makes the linear timelock non-custodial, whereby the contract owner has no ability to alter token amounts and so forth. The operation of the linear timelock contract is purely based on the math in the `transferTimeLockedTokensAfterTimePeriod` function from this point forward.
 
 
 # How to use this linear timelock DApp
