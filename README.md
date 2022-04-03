@@ -91,8 +91,7 @@ Always keep an exact record of how many tokens (sum total of all ERC20 tokens) w
 
 ### Transfer ERC20 tokens to the linear timelock contract
 
-- [ ] Check that the amounts of tokens allocated to each address, in the previous step, are correct.
-
+- [ ] Check that the amounts of tokens allocated to each address, in the previous step, are correct. If there are any issues, do not transfer any ERC20 tokens to the contract address. At this stage if there are any issues you could abandon this contract instance before tokens of real value are sent/locked.
 
 - [ ] Once completely satisfied with all of the above, transfer the appropriate amount of ERC20 tokens (i.e. the sum total of all ERC20 tokens which you allocated to the users in the previous step) to the linear timelock smart contract's address.
 
