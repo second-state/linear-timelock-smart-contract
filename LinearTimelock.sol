@@ -37,7 +37,7 @@ contract LinearTimelock {
     // The epoch, in seconds, representing the period of time from the initialTimestamp to the moment all funds are fully released i.e. 18 months
     uint256 public releaseEdge;
     // Last time a recipient accessed the unlock function
-    mapping(address => uint256) public mostRecentUnlockTimestamp;
+    // mapping(address => uint256) public mostRecentUnlockTimestamp;
 
     // Token amount variables
     mapping(address => uint256) public alreadyWithdrawn;
@@ -161,7 +161,7 @@ contract LinearTimelock {
         require(amount >= (releaseEdge.sub(cliffEdge)), "Amount deposited must be greater than netReleasePeriod");
         require(recipient != address(0), "ERC20: transfer to the zero address");
         balances[recipient] = balances[recipient].add(amount);
-        mostRecentUnlockTimestamp[recipient] = cliffEdge;
+        // mostRecentUnlockTimestamp[recipient] = cliffEdge;
         emit AllocationPerformed(recipient, amount);
     }
 
@@ -175,7 +175,7 @@ contract LinearTimelock {
             // The amount deposited must be greater than the netReleasePeriod or the wei per second will be negative i.e. minimum wei per secon is 1
             require(amounts[i] >= (releaseEdge.sub(cliffEdge)), "Amount deposited must be greater than netReleasePeriod");
             balances[recipients[i]] = balances[recipients[i]].add(amounts[i]);
-            mostRecentUnlockTimestamp[recipients[i]] = cliffEdge;
+            // mostRecentUnlockTimestamp[recipients[i]] = cliffEdge;
             emit AllocationPerformed(recipients[i], amounts[i]);
         }
     }
@@ -183,10 +183,12 @@ contract LinearTimelock {
     /// @dev Calculates the weiPerSecond value for a specific user
     /// @param _to the address to calculate the wei per second for
     /// @return uint256
+    /*
     function calculateWeiPerSecond(address _to) internal view returns(uint256) {
             // Calculate the linear portion of tokens which are made available for each one second time increment
             return (balances[_to].add(alreadyWithdrawn[_to])).div((releaseEdge.sub(cliffEdge)));
     }
+    */
 
     /// @dev Allows recipient to start linearly unlocking tokens (after cliffEdge has elapsed) or unlock up to entire balance (after releaseEdge has elapsed)
     /// @param token - address of the official ERC20 token which is being unlocked here.
@@ -202,14 +204,20 @@ contract LinearTimelock {
         if (block.timestamp > releaseEdge){
             alreadyWithdrawn[to] = alreadyWithdrawn[to].add(amount);
             balances[to] = balances[to].sub(amount);
-            mostRecentUnlockTimestamp[to] = block.timestamp;
+            // mostRecentUnlockTimestamp[to] = block.timestamp;
             token.safeTransfer(to, amount);
             emit TokensUnlocked(to, amount);
         } else {
-            require(amount <= calculateWeiPerSecond(to).mul((block.timestamp.sub(mostRecentUnlockTimestamp[to]))), "Token amount not available for unlock right now, please try lesser amount.");
+            // require(amount <= calculateWeiPerSecond(to).mul((block.timestamp.sub(mostRecentUnlockTimestamp[to]))), "Token amount not available for unlock right now, please try lesser amount.");
+
+            uint256 total = alreadyWithdrawn[to].add(balances[to]);
+            uint256 vested = total.mul(block.timestamp.sub(cliffEdge)).div(releaseEdge.sub(cliffEdge));
+            uint256 avail = vested - alreadyWithdrawn[to];
+            require(amount <= avail, "Token amount not available for unlock right now, please try lesser amount.");
+
             alreadyWithdrawn[to] = alreadyWithdrawn[to].add(amount);
             balances[to] = balances[to].sub(amount);
-            mostRecentUnlockTimestamp[to] = block.timestamp;
+            // mostRecentUnlockTimestamp[to] = block.timestamp;
             token.safeTransfer(to, amount);
             emit TokensUnlocked(to, amount);
         }
@@ -221,7 +229,7 @@ contract LinearTimelock {
     function transferAccidentallyLockedTokens(IERC20 token, uint256 amount) public onlyOwner noReentrant {
         require(address(token) != address(0), "Token address can not be zero");
         // This function can not access the official timelocked tokens; just other random ERC20 tokens that may have been accidently sent here
-        require(token != erc20Contract, "Token address can not be ERC20 address which was passed into the constructor");
+        // require(token != erc20Contract, "Token address can not be ERC20 address which was passed into the constructor");
         // Transfer the amount of the specified ERC20 tokens, to the owner of this contract
         token.safeTransfer(owner, amount);
     }
