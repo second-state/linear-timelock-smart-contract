@@ -129,17 +129,25 @@ contract LinearTimelock {
     /// @dev Sets the initial timestamp and calculates locking period variables i.e. twelveMonths etc.
     /// @param _cliffTimePeriod amount of seconds to add to the initial timestamp i.e. we are essentially creating the end of the lockup period here (which marks the start of the linear release logic)
     /// @param _releaseTimePeriod amount of seconds to add to the initial timestamp i.e. we are essemtially creating the point in time where gradual linear unlocking process is complete and all tokens are all simply available
-    function setTimestamp(uint256 _cliffTimePeriod, uint256 _releaseTimePeriod) public onlyOwner timestampNotSet  {
+    function setTimestamp(int _cliffTimePeriod, int _releaseTimePeriod) public onlyOwner timestampNotSet  {
         // Ensure that time periods are greater then zero
-        require(_cliffTimePeriod > 0 && _releaseTimePeriod > 0, "Time periods can not be zero");
+        require(_cliffTimePeriod != 0 && _releaseTimePeriod != 0, "Time periods can not be zero");
         // Set timestamp boolean to true so that this function can not be called again (and so that token transfer and unlock functions can be called from now on)
         timestampSet = true;
         // Set initial timestamp to the current time
         initialTimestamp = block.timestamp;
         // Add the current time to the cliff time period to create the cliffEdge (The moment when tokens can start to unlock)
-        cliffEdge = initialTimestamp.add(_cliffTimePeriod);
+        if (_cliffTimePeriod > 0) {
+          cliffEdge = initialTimestamp.add(uint256(_cliffTimePeriod));
+        } else {
+          cliffEdge = initialTimestamp.sub(uint256(-_cliffTimePeriod));
+        }
         // Add the current time to the release time period to create the releaseEdge (The final moment when all tokens are free/unlocked)
-        releaseEdge = initialTimestamp.add(_releaseTimePeriod);
+        if (_releaseTimePeriod > 0) {
+          releaseEdge = initialTimestamp.add(uint256(_releaseTimePeriod));
+        } else {
+          releaseEdge = initialTimestamp.sub(uint256(-_releaseTimePeriod));
+        }
         // Tokens are released between cliffEdge and releaseEdge epochs; therefore the cliffEdge must always be older then the releaseEdge
         require(cliffEdge < releaseEdge);
     }
