@@ -237,7 +237,7 @@ contract LinearTimelock {
     function transferAccidentallyLockedTokens(IERC20 token, uint256 amount) public onlyOwner noReentrant {
         require(address(token) != address(0), "Token address can not be zero");
         // This function can not access the official timelocked tokens; just other random ERC20 tokens that may have been accidently sent here
-        // require(token != erc20Contract, "Token address can not be ERC20 address which was passed into the constructor");
+        require(token != erc20Contract, "Token address can not be ERC20 address which was passed into the constructor");
         // Transfer the amount of the specified ERC20 tokens, to the owner of this contract
         token.safeTransfer(owner, amount);
     }
